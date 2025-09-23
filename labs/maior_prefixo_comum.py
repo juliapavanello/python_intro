@@ -1,35 +1,76 @@
-vetor = ["olai","olaisver","olaisveira"]
-aux = ""
-pref = ""
-count = -1
+import random
+import time
 
-for i in range(len(vetor[0])):
-    count = count+1
-    aux = vetor[1][count]
-    pref += aux
-    for j in range(len(vetor)):
-        if(aux != vetor[j][count]):
+# ---------------------------------
+# Gerador de instâncias
+# ---------------------------------
+def gerar_instancia(N):
+    base = ''.join(random.choice("ABCD") for _ in range(random.randint(5, 10)))
+    vetor = []
+    for _ in range(N):
+        s = list(base)
+        for i in range(len(s)):
+            if random.random() < 0.3: 
+                s[i] = random.choice("ABCD")
+        vetor.append(''.join(s))
+    return vetor
+
+
+
+# Abordagem 1 (comparação char a char)
+
+def maior_prefixo_1(vetor):
+    if not vetor:
+        return ""
+    pref = ""
+    for i in range(len(vetor[0])):   
+        aux = vetor[0][i]        
+        for j in range(len(vetor)):
+            if i >= len(vetor[j]) or aux != vetor[j][i]:
+                return pref
+        pref += aux
+    return pref
+
+
+
+# Abordagem 2 (ordenar e comparar primeira e última)
+
+def maior_prefixo_2(vetor):
+    if not vetor:
+        return ""
+    vetor_ordenado = sorted(vetor)
+    pref = ""
+    for i in range(len(vetor_ordenado[0])):
+        if vetor_ordenado[0][i] == vetor_ordenado[-1][i]:
+            pref += vetor_ordenado[0][i]
+        else:
             break
+    return pref
 
-print(pref)
 
-vetor = ["olai","olaisver","olaisveira"]
-pref = ""
-count = -1
 
-for i in range(len(vetor[0])):
-    count += 1
-    aux = vetor[0][count]  # pega letra da primeira palavra como referência
-    todos_iguais = True
+# Testes 
+def rodar_testes():
+    print(f"{'N':<10}{'Tempo A1 (s)':<20}{'Tempo A2 (s)':<20}")
+    for exp in range(1, 21):  # de 2^1 até 2^20
+        N = 2 ** exp
+        vetor = gerar_instancia(N)
 
-    for j in range(1, len(vetor)):
-        if count >= len(vetor[j]) or aux != vetor[j][count]:
-            todos_iguais = False
-            break
+        # Abordagem 1
+        inicio = time.time()
+        maior_prefixo_1(vetor)
+        tempo_a1 = time.time() - inicio
 
-    if not todos_iguais:
-        break  # sai do laço externo se encontrar diferença
+        # Abordagem 2
+        inicio = time.time()
+        maior_prefixo_2(vetor)
+        tempo_a2 = time.time() - inicio
 
-    pref += aux
+        print(f"{N:<10}{tempo_a1:<20.6f}{tempo_a2:<20.6f}")
 
-print(pref)
+
+# -------------------------------
+# Executar
+# -------------------------------
+if __name__ == "__main__":
+    rodar_testes()
