@@ -1,4 +1,5 @@
 from node import Node
+from node import Node2
 
 class LinkedList:
     def __init__(self):
@@ -7,6 +8,62 @@ class LinkedList:
         self.header.next = self.trailer
         self.trailer.prev = self.header
         self.size = 0
+    
+    def __init__(self):
+        self.size = 0
+        self.head = None
+        self.tail = None
+    
+    def size2(self):
+        count = 0
+        walk = self.head.next          
+        while walk is not self.tail:  
+            count += 1
+            walk = walk.next
+        return count
+    
+    def is_empty(self):
+        return self.size != 0
+    
+    def inserir_inicio(self, e):
+        new = Node2(self, e)
+        new.next = self.head
+        self.head = new
+        if self.tail is None:
+            self.tail = new
+        self.size += 1
+
+    def inserir_final(self, e):
+        new = Node2(self, e)
+        if self.is_empty:
+            self.head = new
+            self.tail = new
+        else:
+            self.tail.next = e
+            self.tail = e
+        self.size += 1
+    
+    def remove_inicio(self):
+        if self.is_empty():
+            raise IndexError("A lista está vazia")
+        self.head = self.head.next 
+        if self.head is None:            # se removeu o último elemento
+            self.tail = None
+        self._size -= 1
+
+    def remove_final(self):
+        if self.is_empty():
+            raise IndexError("A lista está vazia")
+        if self.head == self.tail:
+            self.head = None
+            self.tail = None
+        else:
+            walk = self.head
+            while walk.next != self.tail:
+                walk = walk.next
+            walk.next = None
+            self.tail = walk
+        self._size -= 1
 
     def __len__(self):
         return self.size
@@ -78,6 +135,11 @@ class LinkedList:
                 return count
             walk = walk.next
         return -1
+    
+    def clear(self):
+        self.header.next = self.trailer
+        self.trailer.prev = self.header
+        self.size = 0
 
     def concat(self, other):
       if other.is_empty():
@@ -114,3 +176,19 @@ class LinkedList:
         resposta[count] = elemento.element
         elemento = elemento.next
       return resposta
+    
+    def size(self):
+        count = 0
+        walk = self.header.next          
+        while walk is not self.trailer:  
+            count += 1
+            walk = walk.next
+        return count
+    
+    def central(self):
+        walk1 = self.header.next     
+        walk2 = self.trailer.prev     
+        while walk1 != walk2 and walk1.next != walk2: 
+            walk1 = walk1.next
+            walk2 = walk2.prev
+        return walk1
