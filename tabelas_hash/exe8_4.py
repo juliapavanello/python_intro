@@ -14,7 +14,7 @@ class Name:
         return f"{self.first} {self.last}"
     
     def __hash__(self):
-        hash_value = 0
+        return 0
         
     
 nome1 = Name()
